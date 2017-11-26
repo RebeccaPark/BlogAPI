@@ -18,23 +18,26 @@ def jsonify(obj):
         obj = jsonify_dict(obj)
     elif isinstance(obj, list):
         obj = list(map(jsonify_dict, obj))
-
     return json.dumps(obj)
 
 def get_session():
     session_id = request.cookies.get('session_id')
     if not session_id:
-        return False
+            return False
 
     session = sessions.get(session_id)
 
     if not session or session['expired']:
+        print('Session expired')
         return False
 
+    print('Session is alive and well')
+    print('Get session: ', session)
     return session
 
-def set_session(response, session_id):
-    response = make_response(response)
+def set_session(received_response, session_id):
+    print('session_id in set_session', session_id)
+    response = make_response(received_response)
     response.set_cookie('session_id', str(session_id).encode())
     return response
 
@@ -45,5 +48,7 @@ def set_session(response, session_id):
 def require_session():
     session = get_session()
     if session:
+        print('Session exists')
         return session, None
-    return None, redirect('/login')
+    print('Session doesn not exist')
+    return None, redirect('/admin/login')

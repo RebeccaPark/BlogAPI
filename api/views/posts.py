@@ -1,7 +1,7 @@
 from flask import request
 
 from api import api
-from api.data import posts, comments
+from api.data import posts, comments, sessions
 from api.views.utility import jsonify, require_session
 
 
@@ -11,11 +11,12 @@ def posts_handler():
 
 @api.route('/posts', methods=['POST'])
 def posts_create_handler():
-    _, redirect = require_session()
+    session, redirect = require_session()
     if redirect:
         return redirect
     data = request.get_json()
-    post = posts.create(data)
+    user_id = sessions.get_user_id(session['id'])
+    post = posts.create(user_id, data)
     return jsonify(post)
 
 

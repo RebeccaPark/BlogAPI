@@ -1,5 +1,6 @@
 import bcrypt
 
+from api import api
 from api import db
 
 def get():
@@ -26,8 +27,9 @@ def get():
 
 def create(account_dictionary):
     cursor = db.cursor()
-    cursor.execute("INSERT INTO Users (username, password) VALUES (%s, %s);",
-                   (account_dictionary['username'], account_dictionary['password']))
+    #hashed_password = bcrypt.hashpw(account_dictionary['password'].encode(), bcrypt.gensalt())
+    cursor.execute("INSERT INTO Users (username, password, nickname, user_level) VALUES (%s, %s, %s, %s);",
+                   (account_dictionary['username'], bcrypt.hashpw(account_dictionary['password'].encode(), bcrypt.gensalt()), 'nickname', 'Admin'))
     last_id = cursor.lastrowid
     db.commit()
     cursor.execute("SELECT * FROM Users WHERE id=%s", (last_id,))
@@ -36,7 +38,7 @@ def create(account_dictionary):
     account = {
         "id" : account_info[0],
         "username" : account_info[1],
-        "password" : bcrypt.hashpw(account_info[2], bcrypt.gensalt()),
+        "password" : account_info[2],
         "nickname" : account_info[3],
         "picture" : account_info[4],
         "user_level" : account_info[5],
@@ -44,6 +46,8 @@ def create(account_dictionary):
         "created" : account_info[7],
         "updated" : account_info[8]
     }
+    print('account_info:', account_info)
+    print('account: ', account)
     return account
 
 
@@ -84,4 +88,4 @@ def validate(username, password):
     else:
         return False
 
-    return bcrypt.checkpw(password.encode(), fetched_password)
+    return bcrypt.checkpw(password.encode('utf-8'), fetched_password)

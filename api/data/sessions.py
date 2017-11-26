@@ -12,12 +12,14 @@ def create(username):
     cursor.execute('SELECT LAST_INSERT_ID();')
     session_id = cursor.fetchone()[0]
     cursor.close()
+    print('This is session ID', session_id)
     return session_id
 
 def get(session_id):
     cursor = db.cursor()
-    cursor.execute('SELECT user_id, expires, expired FROM Sessions WHERE id=%s;', (session_id,))
     session_information = {}
+    print('session id received: ', session_id)
+    cursor.execute('SELECT user_id, expires, expired FROM Sessions WHERE id=%s;', (session_id,))
     result = cursor.fetchone()
     cursor.close()
     if result:
@@ -36,4 +38,10 @@ def get(session_id):
     #There's no information about this session in the database.
     else:
         session_information = None
+    print('Session_Information: ', session_information)
     return session_information
+
+def get_user_id(session_id):
+    session_information = get(session_id)
+    print(session_information)
+    return session_information['user_id']

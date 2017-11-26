@@ -32,14 +32,14 @@ def get_one_post(post_id):
         "updated": updated,
     }
 
-def create(post_dictionary):
+def create(user_id, post_dictionary):
     post = {}
     cursor = db.cursor()
 
     if not post_dictionary['title'] or not post_dictionary['content']:
         return
     cursor.execute("INSERT INTO Posts (author_id, title, content) Values(%s, %s, %s)",
-                   (1, post_dictionary['title'], post_dictionary['content']))
+                   (user_id, post_dictionary['title'], post_dictionary['content']))
     db.commit()
     last_id = cursor.lastrowid
     cursor.execute("SELECT * FROM Posts WHERE id=%s", (last_id,))

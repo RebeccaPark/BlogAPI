@@ -43,7 +43,7 @@ label {
     width: 100%;
 }
 
-form.add-post input, form.content input{
+form.add-post input, form.content input {
     width: 100%;
 }
 
@@ -54,9 +54,13 @@ form.add-post input, form.content input{
     border-bottom: 1px solid #E2E2E2;
 }
 
-.header__item{
+.header__item {
     display: inline-block;
     padding-left: 10px;
+}
+
+.header__logout {
+    float: right;  
 }
 
 .button {
@@ -72,4 +76,21 @@ form.add-post input, form.content input{
 
 .l-content {
     margin-top: 30px;
+}
+
+.form--login {
+    margin: 80px auto;
+}
+
+.form--login__title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form--login input {
+    width: 300px;
+}
+
+.form--login button {
+    margin-top: 28px;
 }
